@@ -3,27 +3,61 @@
   <br>
   {{ admin.first_name }} {{ admin.last_name }}
   <img @click="changeName()" alt="Vue logo" src="./assets/logo.png">
+  <h5>Full Name</h5>
+  {{ fullName }}
+
+  <AppButton data-vue="Jon" @update="getUpdate">
+    Save
+    <template #icon>Icon</template>
+  </AppButton>
+
+  <button @click="user.first_name = 'Sansa'">Atualizar</button>
+  <AppHook v-if="showAppHook" />
+  <button @click="showAppHook = !showAppHook">
+    Togle
+  </button>
   <HelloWorld msg="Welcome to Your Vue.js App"/>
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed, watch } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
+import AppHook from './components/AppHook.vue'
+import AppButton from './components/AppButton.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  },
+    HelloWorld,
+    AppHook,
+    AppButton
+},
+  
   setup() {
     const user = reactive({
       first_name: 'Jhon',
       last_name: 'Snow'
     })
 
+    const getUpdate = (data) => {
+      console.log('getUpdate', data);
+    }
+
+    const showAppHook = ref(true)
+
+    const fullName = computed(() =>{
+      return `${admin.value.first_name} ${admin.value.last_name}`
+    })
+
     const admin = ref({
       first_name: 'Master',
       last_name: 'User'
+    })
+
+    watch(admin, () => {
+      console.log('Logica Cabulosa');
+    }, {
+      deep: true
     })
 
     let name = 'Alessandro'
@@ -38,6 +72,9 @@ export default {
       user,
       name,
       admin,
+      fullName,
+      showAppHook,
+      getUpdate,
       changeName
     }
   }
